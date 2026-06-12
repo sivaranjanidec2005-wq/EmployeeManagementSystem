@@ -1,19 +1,28 @@
 from pathlib import Path
 import os
 
-# Build paths
+# --------------------------------------------------
+# BASE DIRECTORY
+# --------------------------------------------------
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# --------------------------------------------------
 # SECURITY
+# --------------------------------------------------
 
-SECRET_KEY = 'django-insecure-%4r!j%@%-@ol4rg1t-ueg4tk71i8y#mbx$plqnmrw@bm%3jdv$'
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-local-development-key"
+)
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
-
-# Application definition
+# --------------------------------------------------
+# APPLICATIONS
+# --------------------------------------------------
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -26,10 +35,17 @@ INSTALLED_APPS = [
     'management_app',
 ]
 
+# --------------------------------------------------
+# MIDDLEWARE
+# --------------------------------------------------
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -37,9 +53,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# --------------------------------------------------
+# URLS
+# --------------------------------------------------
 
 ROOT_URLCONF = 'employee_management.urls'
 
+# --------------------------------------------------
+# TEMPLATES
+# --------------------------------------------------
 
 TEMPLATES = [
     {
@@ -61,11 +83,15 @@ TEMPLATES = [
     },
 ]
 
+# --------------------------------------------------
+# WSGI
+# --------------------------------------------------
 
 WSGI_APPLICATION = 'employee_management.wsgi.application'
 
-
+# --------------------------------------------------
 # DATABASE
+# --------------------------------------------------
 
 DATABASES = {
     'default': {
@@ -78,25 +104,32 @@ DATABASES = {
     }
 }
 
-# Password validation
+# --------------------------------------------------
+# PASSWORD VALIDATION
+# --------------------------------------------------
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
-
-# Internationalization
+# --------------------------------------------------
+# LANGUAGE
+# --------------------------------------------------
 
 LANGUAGE_CODE = 'en-us'
 
@@ -106,8 +139,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files
+# --------------------------------------------------
+# STATIC FILES
+# --------------------------------------------------
 
 STATIC_URL = '/static/'
 
@@ -117,30 +151,37 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
 
-# Media files (optional)
+# --------------------------------------------------
+# MEDIA FILES
+# --------------------------------------------------
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / "media"
 
+# --------------------------------------------------
+# LOGIN
+# --------------------------------------------------
 
-# Login & Logout
+LOGIN_URL = "/"
 
-LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = "/dashboard/"
 
-LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = "/"
 
-LOGOUT_REDIRECT_URL = '/'
-
-
-# Default primary key field type
+# --------------------------------------------------
+# DEFAULT AUTO FIELD
+# --------------------------------------------------
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-
-# Email Configuration
+# --------------------------------------------------
+# EMAIL
+# --------------------------------------------------
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -150,15 +191,10 @@ EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
+EMAIL_HOST_USER = os.environ.get(
+    "EMAIL_HOST_USER"
+)
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-
-DEBUG = False
-
-ALLOWED_HOSTS = ["*"]
-
-STATIC_URL = '/static/'
-
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+EMAIL_HOST_PASSWORD = os.environ.get(
+    "EMAIL_HOST_PASSWORD"
+)
