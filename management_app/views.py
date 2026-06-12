@@ -412,31 +412,23 @@ def task_create(request):
 
             if task.employee.email:
 
-                send_mail(
-                    "New Task Assigned",
-                    f"""
-Hello {task.employee.username},
+                try:
+                    send_mail(
+                        "New Task Assigned",
+                        f"You have been assigned a new task.\n\nTask: {task.title}",
+                        settings.EMAIL_HOST_USER,
+                        [task.employee.email],
+                        fail_silently=True
+                    )
+                except:
+                    pass
 
-A new task has been assigned to you.
-
-Task:
-{task.title}
-
-Please login to the Employee Management System to view the details.
-
-Thank You.
-                    """,
-                    settings.EMAIL_HOST_USER,
-                    [task.employee.email],
-                    fail_silently=True
+                messages.success(
+                    request,
+                    "Task assigned successfully."
                 )
 
-            messages.success(
-                request,
-                'Task assigned successfully.'
-            )
-
-            return redirect('task_list')
+                return redirect("task_list")
 
     else:
 
@@ -578,7 +570,6 @@ def attendance(request):
 #=======================
 
 @login_required
-@login_required
 def apply_leave(request):
 
     if request.method == "POST":
@@ -658,13 +649,16 @@ def approve_leave(request, pk):
 
     if leave.employee.email:
 
-        send_mail(
-            "Leave Approved",
-            f"Dear {leave.employee.username}, your leave request has been approved.",
-            settings.EMAIL_HOST_USER,
-            [leave.employee.email],
-            fail_silently=True
-        )
+        try:
+            send_mail(
+                "Leave Approved",
+                f"Dear {leave.employee.username}, your leave request has been approved.",
+                settings.EMAIL_HOST_USER,
+                [leave.employee.email],
+                fail_silently=True
+            )
+        except:
+            pass
 
     messages.success(
         request,
@@ -692,13 +686,16 @@ def reject_leave(request, pk):
 
     if leave.employee.email:
 
-        send_mail(
-            "Leave Rejected",
-            f"Dear {leave.employee.username}, your leave request has been rejected.",
-            settings.EMAIL_HOST_USER,
-            [leave.employee.email],
-            fail_silently=True
-        )
+        try:
+            send_mail(
+                "Leave Rejected",
+                f"Dear {leave.employee.username}, your leave request has been rejected.",
+                settings.EMAIL_HOST_USER,
+                [leave.employee.email],
+                fail_silently=True
+            )
+        except:
+            pass
 
     messages.success(
         request,
@@ -852,9 +849,7 @@ def export_requests(request):
 def approve_export(request, pk):
 
     if not request.user.is_superuser:
-        return redirect(
-            "dashboard"
-        )
+        return redirect("dashboard")
 
     obj = ExportRequest.objects.get(
         id=pk
@@ -862,13 +857,17 @@ def approve_export(request, pk):
 
     obj.status = "Approved"
     obj.save()
-    send_mail(
-        "Export Request Approved",
-        f"Your {obj.report_type} report request has been approved.",
-        settings.EMAIL_HOST_USER,
-        [obj.employee.email],
-        fail_silently=True
-    )
+
+    try:
+        send_mail(
+            "Export Request Approved",
+            f"Your {obj.report_type} report request has been approved.",
+            settings.EMAIL_HOST_USER,
+            [obj.employee.email],
+            fail_silently=True
+        )
+    except:
+        pass
 
     messages.success(
         request,

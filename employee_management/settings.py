@@ -96,11 +96,26 @@ WSGI_APPLICATION = 'employee_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASSWORD"),
-        'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT"),
+        'NAME': os.environ.get(
+            "DB_NAME",
+            "employee_management_db"
+        ),
+        'USER': os.environ.get(
+            "DB_USER",
+            "avnadmin"
+        ),
+        'PASSWORD': os.environ.get(
+            "DB_PASSWORD",
+            "AVNS_79A96wBgKYc0N5Ef_Ap"
+        ),
+        'HOST': os.environ.get(
+            "DB_HOST",
+            "mysql-dbatt-sivaranjanidec2005-bf15.e.aivencloud.com"
+        ),
+        'PORT': os.environ.get(
+            "DB_PORT",
+            "23867"
+        ),
     }
 }
 
@@ -198,3 +213,5 @@ EMAIL_HOST_USER = os.environ.get(
 EMAIL_HOST_PASSWORD = os.environ.get(
     "EMAIL_HOST_PASSWORD"
 )
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
