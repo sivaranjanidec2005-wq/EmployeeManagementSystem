@@ -1,0 +1,59 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+<h2>
+
+Announcements
+
+</h2>
+
+</div>
+
+{% for a in announcements %}
+
+<div class="card mb-3">
+
+<div class="card-body">
+
+<h4>
+
+{{ a.title }}
+
+</h4>
+
+<p>
+
+{{ a.message }}
+
+</p>
+
+<small>
+
+Posted by
+
+{{ a.created_by }}
+
+|
+
+{{ a.created_at }}
+
+</small>
+
+</div>
+
+</div>
+
+{% empty %}
+
+<div class="alert alert-info">
+
+No announcements.
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

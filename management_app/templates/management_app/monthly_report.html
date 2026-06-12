@@ -1,0 +1,159 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+<h2>
+
+Monthly Attendance Report
+
+</h2>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<div class="dashboard-card">
+
+<h5>Present</h5>
+
+<h2>
+
+{{ present_days }}
+
+</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="dashboard-card">
+
+<h5>Absent</h5>
+
+<h2>
+
+{{ absent_days }}
+
+</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="dashboard-card">
+
+<h5>Attendance %</h5>
+
+<h2>
+
+{{ attendance_percentage }}
+
+</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="dashboard-card">
+
+<h5>Completed Tasks</h5>
+
+<h2>
+
+{{ completed_tasks }}
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<div class="card-body">
+
+<h4>
+
+Completed Projects
+
+</h4>
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Project</th>
+
+<th>Completed Date</th>
+
+<th>Remarks</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for p in completed_projects %}
+
+<tr>
+
+<td>
+
+{{ p.project_name }}
+
+</td>
+
+<td>
+
+{{ p.completed_date }}
+
+</td>
+
+<td>
+
+{{ p.remarks }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="3">
+
+No completed projects.
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

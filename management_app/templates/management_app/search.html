@@ -1,0 +1,159 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+<h2>
+
+Global Search
+
+</h2>
+
+</div>
+
+<div class="card">
+
+<div class="card-body">
+
+<form method="GET">
+
+<div class="row">
+
+<div class="col-md-10">
+
+<input
+type="text"
+name="q"
+class="form-control"
+placeholder="Search Employee, Project or Task"
+value="{{ query }}">
+
+</div>
+
+<div class="col-md-2">
+
+<button
+class="btn btn-primary w-100">
+
+Search
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<br>
+
+{% if query %}
+
+<div class="card">
+
+<div class="card-body">
+
+<h4>
+
+Employees
+
+</h4>
+
+<ul>
+
+{% for e in employees %}
+
+<li>
+
+{{ e.username }}
+
+-
+
+{{ e.email }}
+
+</li>
+
+{% empty %}
+
+<li>
+
+No Employees Found
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+<hr>
+
+<h4>
+
+Projects
+
+</h4>
+
+<ul>
+
+{% for p in projects %}
+
+<li>
+
+{{ p.name }}
+
+</li>
+
+{% empty %}
+
+<li>
+
+No Projects Found
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+<hr>
+
+<h4>
+
+Tasks
+
+</h4>
+
+<ul>
+
+{% for t in tasks %}
+
+<li>
+
+{{ t.title }}
+
+</li>
+
+{% empty %}
+
+<li>
+
+No Tasks Found
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

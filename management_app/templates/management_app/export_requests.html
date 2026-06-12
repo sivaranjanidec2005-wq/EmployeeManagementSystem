@@ -1,0 +1,110 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h2>
+
+        Export Requests
+
+    </h2>
+
+</div>
+
+<div class="card">
+
+<div class="card-body">
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>Employee</th>
+<th>Report</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for req in requests %}
+
+<tr>
+
+<td>
+
+{{ req.employee.username }}
+
+</td>
+
+<td>
+
+{{ req.report_type }}
+
+</td>
+
+<td>
+
+{{ req.status }}
+
+</td>
+
+<td>
+
+{% if req.status == "Pending" %}
+
+<a
+href="{% url 'approve_export' req.id %}"
+class="btn btn-success btn-sm">
+
+Approve
+
+</a>
+
+<a
+href="{% url 'reject_export' req.id %}"
+class="btn btn-danger btn-sm">
+
+Reject
+
+</a>
+
+{% else %}
+
+-
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="4">
+
+No requests available.
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

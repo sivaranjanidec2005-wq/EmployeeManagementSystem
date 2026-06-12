@@ -1,0 +1,46 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="card shadow-lg">
+
+    <div class="card-body text-center">
+
+        <h3>
+
+            Delete Project
+
+        </h3>
+
+        <p>
+
+            Are you sure you want to delete
+
+            <b>{{ project.name }}</b> ?
+
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <button class="btn btn-danger">
+
+                Delete
+
+            </button>
+
+            <a href="{% url 'project_list' %}"
+               class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

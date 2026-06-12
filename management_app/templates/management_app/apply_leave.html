@@ -1,0 +1,62 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<h2>Apply Leave</h2>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<label>Leave Type</label>
+
+<select
+name="leave_type"
+class="form-control">
+
+<option>Sick Leave</option>
+<option>Casual Leave</option>
+<option>Emergency Leave</option>
+
+</select>
+
+<br>
+
+<label>Start Date</label>
+
+<input
+type="date"
+name="start_date"
+class="form-control">
+
+<br>
+
+<label>End Date</label>
+
+<input
+type="date"
+name="end_date"
+class="form-control">
+
+<br>
+
+<label>Reason</label>
+
+<textarea
+name="reason"
+class="form-control">
+
+</textarea>
+
+<br>
+
+<button
+class="btn btn-primary">
+
+Apply
+
+</button>
+
+</form>
+
+{% endblock %}

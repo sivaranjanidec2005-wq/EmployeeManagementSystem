@@ -1,0 +1,77 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h2>
+
+        Request Report Export
+
+    </h2>
+
+</div>
+
+<div class="card">
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="mb-3">
+
+                <label>
+
+                    Report Type
+
+                </label>
+
+                <select
+                    name="report_type"
+                    class="form-control"
+                    required>
+
+                    <option value="Attendance">
+
+                        Attendance Report
+
+                    </option>
+
+                    <option value="Project">
+
+                        Project Report
+
+                    </option>
+
+                    <option value="Task">
+
+                        Task Report
+
+                    </option>
+
+                    <option value="Monthly Attendance">
+
+                        Monthly Attendance Report
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button
+                class="btn btn-primary">
+
+                Submit Request
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

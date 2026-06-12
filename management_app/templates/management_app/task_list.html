@@ -1,0 +1,115 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h2>Tasks</h2>
+
+    {% if user.is_superuser %}
+
+    <a href="{% url 'task_create' %}"
+       class="btn btn-primary">
+
+        Add Task
+
+    </a>
+
+    {% endif %}
+
+</div>
+
+<div class="card">
+
+<div class="card-body">
+
+<table class="table table-hover align-middle">
+
+<thead>
+
+<tr>
+
+<th>Title</th>
+<th>Employee</th>
+<th>Status</th>
+<th>Due Date</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for task in tasks %}
+
+<tr>
+
+<td>{{ task.title }}</td>
+
+<td>{{ task.employee.username }}</td>
+
+<td>
+
+{% if task.status == "Completed" %}
+
+<span class="badge bg-success">
+
+Completed
+
+</span>
+
+{% elif task.status == "In Progress" %}
+
+<span class="badge bg-warning">
+
+In Progress
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Pending
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>{{ task.due_date }}</td>
+
+<td>
+
+{% if not user.is_superuser %}
+
+<a href="{% url 'task_update' task.id %}"
+   class="btn btn-success btn-sm">
+
+Update
+
+</a>
+
+{% else %}
+
+-
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

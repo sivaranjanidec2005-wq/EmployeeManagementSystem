@@ -1,0 +1,214 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <i class="fa-solid fa-gauge-high"></i>
+            Dashboard
+        </h2>
+        <p class="text-muted">
+            Welcome to Employee Attendance & Project Management System
+        </p>
+    </div>
+
+    {% if is_admin %}
+
+    <!-- Admin Dashboard -->
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card dashboard-card shadow">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-users fa-3x mb-3"></i>
+                    <h5>Total Employees</h5>
+                    <h2>{{ total_employees }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card dashboard-card shadow">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-folder-open fa-3x mb-3"></i>
+                    <h5>Total Projects</h5>
+                    <h2>{{ total_projects }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card dashboard-card shadow">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-list-check fa-3x mb-3"></i>
+                    <h5>Total Tasks</h5>
+                    <h2>{{ total_tasks }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card dashboard-card shadow">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-user-check fa-3x mb-3"></i>
+                    <h5>Present Today</h5>
+                    <h2>{{ present_today }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow border-0 rounded-4 mt-4">
+        <div class="card-body">
+
+            <h4 class="mb-3">
+                <i class="fa-solid fa-user-shield"></i>
+                Admin Controls
+            </h4>
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+                    <a href="{% url 'employee_create' %}"
+                       class="btn btn-primary w-100">
+                        <i class="fa-solid fa-user-plus"></i>
+                        Add Employee
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a href="{% url 'project_create' %}"
+                       class="btn btn-success w-100">
+                        <i class="fa-solid fa-folder-plus"></i>
+                        Add Project
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a href="{% url 'task_create' %}"
+                       class="btn btn-warning w-100">
+                        <i class="fa-solid fa-list"></i>
+                        Add Task
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a href="{% url 'attendance_history' %}"
+                       class="btn btn-info w-100">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Attendance
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    {% else %}
+
+    <!-- Employee Dashboard -->
+
+    <div class="row">
+
+        <div class="col-lg-4 mb-4">
+            <div class="card dashboard-card shadow">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-folder-open fa-3x mb-3"></i>
+                    <h5>My Projects</h5>
+                    <h2>{{ my_projects }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card dashboard-card shadow">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-hourglass-half fa-3x mb-3"></i>
+                    <h5>Pending Tasks</h5>
+                    <h2>{{ pending_tasks }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card dashboard-card shadow">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-circle-check fa-3x mb-3"></i>
+                    <h5>Completed Tasks</h5>
+                    <h2>{{ completed_tasks }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow border-0 rounded-4 mt-4">
+        <div class="card-body">
+
+            <h4 class="mb-3">
+                <i class="fa-solid fa-user"></i>
+                Employee Actions
+            </h4>
+
+            <div class="row">
+
+                {% if attendance_marked %}
+
+                <div class="col-md-12">
+                    <div class="alert alert-success">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Attendance marked for today.
+                    </div>
+                </div>
+
+                {% else %}
+
+                <div class="col-md-6 mb-3">
+                    <a href="{% url 'mark_attendance' %}"
+                       class="btn btn-success w-100">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        Check In
+                    </a>
+                </div>
+
+                {% endif %}
+
+                <div class="col-md-6 mb-3">
+                    <a href="{% url 'check_out' %}"
+                       class="btn btn-danger w-100">
+                        <i class="fa-solid fa-clock"></i>
+                        Check Out
+                    </a>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <a href="{% url 'project_list' %}"
+                       class="btn btn-primary w-100">
+                        <i class="fa-solid fa-folder-open"></i>
+                        My Projects
+                    </a>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <a href="{% url 'task_list' %}"
+                       class="btn btn-warning w-100">
+                        <i class="fa-solid fa-list-check"></i>
+                        My Tasks
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

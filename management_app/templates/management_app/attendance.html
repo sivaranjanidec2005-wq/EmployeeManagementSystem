@@ -1,0 +1,83 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-lg">
+
+            <div class="card-body text-center">
+
+                <h2 class="mb-4">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    Employee Attendance
+                </h2>
+
+                <hr>
+
+                <h4 class="mb-3">
+                    Welcome,
+                    <span class="text-primary">
+                        {{ user.username }}
+                    </span>
+                </h4>
+
+                <p class="text-dark">
+                    Date :
+                    <strong>
+                        {% now "d M Y" %}
+                    </strong>
+                </p>
+
+                <div class="row mt-4">
+
+                    <div class="col-md-6 mb-3">
+
+                        <a href="{% url 'mark_attendance' %}"
+                           class="btn btn-success btn-lg w-100">
+
+                            <i class="fa-solid fa-right-to-bracket"></i>
+
+                            Check In
+
+                        </a>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <a href="{% url 'check_out' %}"
+                           class="btn btn-danger btn-lg w-100">
+
+                            <i class="fa-solid fa-right-from-bracket"></i>
+
+                            Check Out
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <a href="{% url 'attendance_history' %}"
+                   class="btn btn-primary">
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    View Attendance History
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
