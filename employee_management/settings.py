@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,14 +70,13 @@ WSGI_APPLICATION = 'employee_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'employee_management_db',
-        'USER': 'root',
-        'PASSWORD': 'Sivadec@2005',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
     }
 }
-
 
 # Password validation
 
