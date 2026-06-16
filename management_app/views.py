@@ -127,7 +127,7 @@ Thank You
 
     )
 
-@login_required
+
 def verify_otp(request):
 
     user_id = request.session.get(
@@ -135,6 +135,12 @@ def verify_otp(request):
     )
 
     if not user_id:
+
+        messages.error(
+            request,
+            "Session expired. Please login again."
+        )
+
         return redirect(
             "login"
         )
@@ -143,9 +149,20 @@ def verify_otp(request):
         id=user_id
     )
 
-    verification = EmailVerification.objects.get(
+    verification = EmailVerification.objects.filter(
         user=user
-    )
+    ).first()
+
+    if not verification:
+
+        messages.error(
+            request,
+            "OTP record not found."
+        )
+
+        return redirect(
+            "login"
+        )
 
     if request.method == "POST":
 
@@ -160,11 +177,26 @@ def verify_otp(request):
                 user
             )
 
-            del request.session["otp_user_id"]
+            Notification.objects.create(
+
+                user=user,
+
+                title="Login Verified",
+
+                message="OTP verified successfully."
+
+            )
+
+            del request.session[
+                "otp_user_id"
+            ]
 
             messages.success(
+
                 request,
+
                 "OTP Verified Successfully."
+
             )
 
             return redirect(
@@ -174,13 +206,19 @@ def verify_otp(request):
         else:
 
             messages.error(
+
                 request,
+
                 "Invalid OTP"
+
             )
 
     return render(
+
         request,
+
         "management_app/verify_otp.html"
+
     )
 
 @login_required
