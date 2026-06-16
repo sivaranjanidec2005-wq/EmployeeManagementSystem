@@ -27,7 +27,7 @@
 
 <body>
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated and request.path != '/verify-otp/' %}
 
 <div class="wrapper">
 
