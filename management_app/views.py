@@ -1982,3 +1982,23 @@ def download_excel(request, pk):
     )
 
     return response
+
+
+
+
+
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.conf import settings
+
+def test_email(request):
+
+    send_mail(
+        "Test Email",
+        "Email sending works successfully.",
+        settings.EMAIL_HOST_USER,
+        ["YOUR_EMAIL@gmail.com"],  # put your email here
+        fail_silently=False
+    )
+
+    return HttpResponse("Email Sent")

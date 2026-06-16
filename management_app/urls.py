@@ -212,5 +212,9 @@ path(
     name="notifications"
 ),
 
-
+path(
+    "test-email/",
+    views.test_email,
+    name="test_email"
+),
 ]
