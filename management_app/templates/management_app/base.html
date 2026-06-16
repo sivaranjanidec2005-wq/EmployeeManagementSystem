@@ -245,50 +245,53 @@ Search
 
     <nav class="top-navbar">
 
-    <div class="d-flex justify-content-between align-items-center w-100">
+        <div class="d-flex justify-content-between align-items-center w-100">
 
-        <a href="{% url 'notifications' %}"
-           class="text-dark text-decoration-none">
+            <a href="{% url 'notifications' %}"
+               class="text-dark text-decoration-none">
 
-            <i class="fa-solid fa-bell fa-xl"></i>
+                <i class="fa-solid fa-bell fa-xl"></i>
 
-        </a>
+            </a>
 
-        <div class="profile-dropdown">
+            <div class="profile-dropdown">
 
-    <button class="profile-btn">
+                <button class="profile-btn">
 
-        <span>
-            Welcome,
-            {{ request.user.first_name }}
-        </span>
+                    <span>
+                        Welcome, {{ request.user.first_name }}
+                    </span>
 
-        <div class="avatar">
-            {{ request.user.first_name|first|upper }}
+                    <div class="avatar">
+                        {{ request.user.first_name|first|upper }}
+                    </div>
+
+                </button>
+
+                <div class="profile-menu">
+
+                    <a href="{% url 'update_profile' %}">
+                        <i class="fa-solid fa-user"></i>
+                        Update Profile
+                    </a>
+
+                    <a href="{% url 'change_password' %}">
+                        <i class="fa-solid fa-key"></i>
+                        Change Password
+                    </a>
+
+                    <a href="{% url 'logout' %}">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
 
-    </button>
-
-    <div class="dropdown-menu">
-
-        <a href="{% url 'update_profile' %}">
-            Update Profile
-        </a>
-
-        <a href="{% url 'change_password' %}">
-            Change Password
-        </a>
-
-        <a href="{% url 'logout' %}">
-            Logout
-        </a>
-
-    </div>
-
-</div>
-    </div>
-
-</nav>
+    </nav>
 
     {% if messages %}
 
@@ -310,9 +313,6 @@ Search
         {% endblock %}
 
     </div>
-
-</div>
-```
 
 </div>
 
