@@ -1997,7 +1997,7 @@ def test_email(request):
         "Test Email",
         "Email sending works successfully.",
         settings.EMAIL_HOST_USER,
-        ["YOUR_EMAIL@gmail.com"],  # put your email here
+        ["sivaranjanix6@gmail.com"],  # put your email here
         fail_silently=False
     )
 
