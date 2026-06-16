@@ -43,9 +43,7 @@ from .forms import (
 def login_view(request):
 
     if request.user.is_authenticated:
-        return redirect(
-            "dashboard"
-        )
+        return redirect("dashboard")
 
     form = LoginForm(
         request,
@@ -58,32 +56,27 @@ def login_view(request):
 
             user = form.get_user()
 
-            verification = EmailVerification.objects.filter(
+            otp = str(
+                random.randint(
+                    100000,
+                    999999
+                )
+            )
+
+            verification, created = EmailVerification.objects.get_or_create(
                 user=user
-            ).first()
+            )
 
-            if verification:
+            verification.otp = otp
+            verification.save()
 
-                if not verification.is_verified:
+            try:
 
-                    otp = str(
-                        random.randint(
-                            100000,
-                            999999
-                        )
-                    )
+                send_mail(
 
-                    verification.otp = otp
+                    "OTP Verification",
 
-                    verification.save()
-
-                    try:
-
-                        send_mail(
-
-                            "OTP Verification",
-
-                            f"""
+                    f"""
 Hello {user.username},
 
 Your OTP is:
@@ -91,43 +84,26 @@ Your OTP is:
 {otp}
 
 Thank You
-                            """,
+                    """,
 
-                            settings.EMAIL_HOST_USER,
+                    settings.EMAIL_HOST_USER,
 
-                            [user.email],
+                    [user.email],
 
-                            fail_silently=True
+                    fail_silently=True
 
-                        )
+                )
 
-                    except:
-                        pass
-
-                    login(
-                        request,
-                        user
-                    )
-
-                    return redirect(
-                        "verify_otp"
-                    )
+            except:
+                pass
 
             login(
                 request,
                 user
             )
 
-            messages.success(
-
-                request,
-
-                f"Welcome {user.username}!"
-
-            )
-
             return redirect(
-                "dashboard"
+                "verify_otp"
             )
 
         else:
@@ -176,10 +152,6 @@ def verify_otp(request):
         )
 
         if otp == verification.otp:
-
-            verification.is_verified = True
-
-            verification.save()
 
             Notification.objects.create(
 
