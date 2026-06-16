@@ -71,31 +71,20 @@ def login_view(request):
             verification.save()
 
             try:
-                print("EMAIL =", user.email)
+                print("BEFORE EMAIL")
+
                 send_mail(
-
-                   "OTP Verification",
-
-                   f"""
-Hello {user.username},
-
-Your OTP is:
-
-{otp}
-
-Thank You
-                   """,
-
-                   settings.EMAIL_HOST_USER,
-
-                   [user.email],
-
-                   fail_silently=False
-
+                    "OTP Verification",
+                    f"Your OTP is {otp}",
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=False
                 )
 
-            except:
-                pass
+                print("AFTER EMAIL")
+
+            except Exception as e:
+                print("EMAIL ERROR =", str(e))
 
             request.session["otp_user_id"] = user.id
 
