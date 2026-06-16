@@ -90,7 +90,7 @@ Thank You
 
                    [user.email],
 
-                   fail_silently=True
+                   fail_silently=False
 
                 )
 
