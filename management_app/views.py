@@ -1,4 +1,6 @@
 import openpyxl
+import random
+
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
@@ -12,6 +14,13 @@ from django.core.mail import send_mail
 from django.conf import settings
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
+
+from .models import EmailVerification
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
+from .models import Notification
 
 
 from .models import Attendance, Project, Task, ExportRequest, Announcement, CompletedProject
@@ -27,39 +36,60 @@ from .forms import (
 from .models import Leave
 
 
+
 # ==========================
 # LOGIN VIEW
 # ==========================
+
 def login_view(request):
+
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect("dashboard")
 
     form = LoginForm(request, data=request.POST or None)
 
-    if request.method == 'POST':
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
+    if request.method == "POST":
 
-            messages.success(
-                request,
-                f'Welcome, {user.username}!'
+        if form.is_valid():
+
+            user = form.get_user()
+
+            otp = str(random.randint(100000, 999999))
+
+            verification, created = EmailVerification.objects.get_or_create(
+                user=user
             )
 
-            return redirect('dashboard')
+            verification.otp = otp
+            verification.save()
+
+            try:
+                send_mail(
+                    "Login Verification OTP",
+                    f"Your OTP is: {otp}",
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=True
+                )
+            except:
+                pass
+
+            request.session["otp_user_id"] = user.id
+
+            return redirect("verify_otp")
 
         else:
+
             messages.error(
                 request,
-                'Invalid username or password.'
+                "Invalid username or password."
             )
 
     return render(
         request,
-        'management_app/login.html',
-        {'form': form}
+        "management_app/login.html",
+        {"form": form}
     )
-
 
 # ==========================
 # LOGOUT VIEW
@@ -408,7 +438,11 @@ def task_create(request):
 
         if form.is_valid():
 
-            task = form.save()
+            Notification.objects.create(
+                user=task.employee,
+                title="New Task",
+                message=f"You have been assigned {task.title}"
+            )
 
             if task.employee.email:
 
@@ -645,7 +679,11 @@ def approve_leave(request, pk):
 
     leave.status = "Approved"
 
-    leave.save()
+    Notification.objects.create(
+        user=leave.employee,
+        title="Leave Approved",
+        message="Your leave request has been approved."
+    )
 
     if leave.employee.email:
 
@@ -682,7 +720,11 @@ def reject_leave(request, pk):
 
     leave.status = "Rejected"
 
-    leave.save()
+    Notification.objects.create(
+        user=leave.employee,
+        title="Leave Rejected",
+        message="Your leave request has been rejected."
+    )
 
     if leave.employee.email:
 
@@ -1131,3 +1173,285 @@ def download_excel(request, pk):
     workbook.save(response)
 
     return response
+
+#=======================
+#   Verify OTP
+#=======================
+
+def generate_otp():
+    return str(random.randint(100000, 999999))
+
+@login_required
+def employee_create(request):
+
+    if not request.user.is_superuser:
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        form = EmployeeCreationForm(request.POST)
+
+        if form.is_valid():
+
+            user = form.save()
+
+            otp = generate_otp()
+
+            EmailVerification.objects.create(
+                user=user,
+                otp=otp
+            )
+
+            try:
+                send_mail(
+                    "Email Verification",
+                    f"Welcome to Employee Management System.\n\nYour OTP is: {otp}",
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=True
+                )
+            except:
+                pass
+
+            messages.success(
+                request,
+                "Employee created successfully."
+            )
+
+            return redirect("employee_list")
+
+    else:
+        form = EmployeeCreationForm()
+
+    return render(
+        request,
+        "management_app/employee_form.html",
+        {
+            "form": form
+        }
+    )
+
+
+def verify_otp(request):
+
+    user_id = request.session.get("otp_user_id")
+
+    if not user_id:
+        return redirect("login")
+
+    user = User.objects.get(id=user_id)
+
+    verification = EmailVerification.objects.get(
+        user=user
+    )
+
+    if request.method == "POST":
+
+        otp = request.POST.get("otp")
+
+        if otp == verification.otp:
+
+            login(request, user)
+
+            del request.session["otp_user_id"]
+
+            messages.success(
+                request,
+                "Login Successful."
+            )
+
+            return redirect("dashboard")
+
+        else:
+
+            messages.error(
+                request,
+                "Invalid OTP."
+            )
+
+    return render(
+        request,
+        "management_app/verify_otp.html"
+    )
+
+#=======================
+#  Change Password
+#=======================
+
+@login_required
+def change_password(request):
+
+    if request.method == "POST":
+
+        form = PasswordChangeForm(
+            request.user,
+            request.POST
+        )
+
+        if form.is_valid():
+
+            Notification.objects.create(
+                user=request.user,
+                title="Password Changed",
+                message="Your password was changed successfully."
+            )
+
+            update_session_auth_hash(
+                request,
+                user
+            )
+
+            if user.email:
+
+                try:
+
+                    send_mail(
+
+                        "Password Changed Successfully",
+
+                        f"""
+Hello {user.username},
+
+Your Employee Management System password has been changed successfully.
+
+If you did not perform this action,
+please contact the administrator immediately.
+
+Thank You.
+                        """,
+
+                        settings.EMAIL_HOST_USER,
+
+                        [user.email],
+
+                        fail_silently=True
+
+                    )
+
+                except Exception:
+                    pass
+
+            messages.success(
+                request,
+                "Password changed successfully."
+            )
+
+            return redirect(
+                "dashboard"
+            )
+
+    else:
+
+        form = PasswordChangeForm(
+            request.user
+        )
+
+    return render(
+
+        request,
+
+        "management_app/change_password.html",
+
+        {
+            "form": form
+        }
+
+    )
+
+#=======================
+# Update Profile
+#=======================
+
+@login_required
+def update_profile(request):
+
+    if request.method == "POST":
+
+        user = request.user
+
+        user.username = request.POST.get(
+            "username"
+        )
+
+        user.first_name = request.POST.get(
+            "first_name"
+        )
+
+        user.last_name = request.POST.get(
+            "last_name"
+        )
+
+        user.email = request.POST.get(
+            "email"
+        )
+
+        Notification.objects.create(
+            user=request.user,
+            title="Profile Updated",
+            message="Your profile information was updated."
+        )
+
+        if user.email:
+
+            try:
+
+                send_mail(
+
+                    "Profile Updated",
+
+                    f"""
+Hello {user.username},
+
+Your Employee Management System profile has been updated successfully.
+
+If you did not make this change,
+please contact the administrator.
+
+Thank You.
+                    """,
+
+                    settings.EMAIL_HOST_USER,
+
+                    [user.email],
+
+                    fail_silently=True
+
+                )
+
+            except Exception:
+                pass
+
+        messages.success(
+            request,
+            "Profile updated successfully."
+        )
+
+        return redirect(
+            "dashboard"
+        )
+
+    return render(
+
+        request,
+
+        "management_app/update_profile.html"
+
+    )
+
+#=======================
+#  Notification Alert
+#=======================
+
+@login_required
+def notifications(request):
+
+    notifications = Notification.objects.filter(
+        user=request.user
+    )
+
+    return render(
+        request,
+        "management_app/notifications.html",
+        {
+            "notifications": notifications
+        }
+    )

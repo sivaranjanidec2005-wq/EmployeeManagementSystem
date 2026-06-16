@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get(
     "django-insecure-local-development-key"
 )
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -92,6 +92,7 @@ WSGI_APPLICATION = 'employee_management.wsgi.application'
 # --------------------------------------------------
 # DATABASE
 # --------------------------------------------------
+
 
 DATABASES = {
     'default': {
@@ -198,5 +199,3 @@ EMAIL_HOST_USER = os.environ.get(
 EMAIL_HOST_PASSWORD = os.environ.get(
     "EMAIL_HOST_PASSWORD"
 )
-
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

@@ -1,0 +1,69 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="card p-4">
+
+    <h3>
+
+        Update Profile
+
+    </h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>Username</label>
+
+        <input
+            type="text"
+            name="username"
+            value="{{ user.username }}"
+            class="form-control">
+
+        <br>
+
+        <label>First Name</label>
+
+        <input
+            type="text"
+            name="first_name"
+            value="{{ user.first_name }}"
+            class="form-control">
+
+        <br>
+
+        <label>Last Name</label>
+
+        <input
+            type="text"
+            name="last_name"
+            value="{{ user.last_name }}"
+            class="form-control">
+
+        <br>
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            name="email"
+            value="{{ user.email }}"
+            class="form-control">
+
+        <br>
+
+        <button
+            class="btn btn-primary"
+            type="submit">
+
+            Update Profile
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

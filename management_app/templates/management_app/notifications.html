@@ -1,0 +1,29 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<h3>Notifications</h3>
+
+{% for notification in notifications %}
+
+<div class="card p-3 mb-3">
+
+    <h5>{{ notification.title }}</h5>
+
+    <p>{{ notification.message }}</p>
+
+    <small>
+
+        {{ notification.created_at }}
+
+    </small>
+
+</div>
+
+{% empty %}
+
+<p>No notifications.</p>
+
+{% endfor %}
+
+{% endblock %}
