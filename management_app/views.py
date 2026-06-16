@@ -69,7 +69,15 @@ def login_view(request):
 
             #verification.otp = otp
             #verification.save()
-            print("OTP =", otp)
+            send_mail(
+                "OTP Verification",
+                f"Your OTP is {otp}",
+                settings.EMAIL_HOST_USER,
+                [user.email],
+                fail_silently=False
+            )
+
+            print("OTP Email Sent")
 
             #try:
 
@@ -1987,18 +1995,3 @@ def download_excel(request, pk):
 
 
 
-from django.core.mail import send_mail
-from django.http import HttpResponse
-from django.conf import settings
-
-def test_email(request):
-
-    send_mail(
-        "Test Email",
-        "Email sending works successfully.",
-        settings.EMAIL_HOST_USER,
-        ["sivaranjanix6@gmail.com"],  # put your email here
-        fail_silently=False
-    )
-
-    return HttpResponse("Email Sent")
