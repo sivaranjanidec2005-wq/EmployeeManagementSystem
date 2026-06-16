@@ -66,31 +66,15 @@ def login_view(request):
             verification, created = EmailVerification.objects.get_or_create(
                 user=user
             )
-
             verification.otp = otp
             verification.save()
 
-            try:
-                print("BEFORE EMAIL")
-
-                send_mail(
-                    "OTP Verification",
-                    f"Your OTP is {otp}",
-                    settings.EMAIL_HOST_USER,
-                    [user.email],
-                    fail_silently=False
-                )
-
-                print("AFTER EMAIL")
-
-            except Exception as e:
-                print("EMAIL ERROR =", str(e))
+            print("OTP =", otp)
 
             request.session["otp_user_id"] = user.id
 
-            return redirect(
-                "verify_otp"
-            )
+            return redirect("verify_otp")
+
 
         else:
 
