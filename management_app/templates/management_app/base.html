@@ -237,50 +237,7 @@ Search
 
     {% endif %}
 
-    <!-- ACCOUNT -->
 
-    <div class="menu-title">
-
-        ACCOUNT
-
-    </div>
-
-    <ul class="menu-list">
-
-        <li>
-            <a href="{% url 'logout' %}">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Logout
-            </a>
-        </li>
-
-        <li>
-
-            <a href="{% url 'update_profile' %}">
-
-               <i class="fa-solid fa-user-pen"></i>
-
-                Update Profile
-
-            </a>
-
-        </li>
-
-        <li>
-
-           <a href="{% url 'change_password' %}">
-
-             <i class="fa-solid fa-key"></i>
-
-             Change Password
-
-           </a>
-
-</li>
-
-    </ul>
-
-</div>
 
 <!-- CONTENT -->
 
@@ -297,24 +254,38 @@ Search
 
         </a>
 
-        <div class="profile-box">
+        <div class="profile-dropdown">
 
-            <h5>
+    <button class="profile-btn">
 
-                Welcome,
+        <span>
+            Welcome,
+            {{ request.user.first_name }}
+        </span>
 
-                <b>{{ user.username }}</b>
-
-            </h5>
-
-            <div class="profile-circle">
-
-                {{ user.username|first|upper }}
-
-            </div>
-
+        <div class="avatar">
+            {{ request.user.first_name|first|upper }}
         </div>
 
+    </button>
+
+    <div class="dropdown-menu">
+
+        <a href="{% url 'update_profile' %}">
+            Update Profile
+        </a>
+
+        <a href="{% url 'change_password' %}">
+            Change Password
+        </a>
+
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
+
+    </div>
+
+</div>
     </div>
 
 </nav>
