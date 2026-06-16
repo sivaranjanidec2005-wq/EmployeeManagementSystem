@@ -92,7 +92,7 @@ body{
 
 .content{
     margin-left:280px;
-    width:100%;
+    width:calc(100% - 280px);
     padding:30px;
 }
 
@@ -101,6 +101,8 @@ body{
     padding:18px 25px;
     border-radius:18px;
     box-shadow:0 8px 25px rgba(0,0,0,.05);
+
+    width:100%;
 }
 
 .profile-box{
@@ -439,6 +441,15 @@ body{
     background:#f5f5f5;
 }
 
-.profile-dropdown:hover .profile-menu{
+.profile-dropdown:focus-within .profile-menu{
     display:block;
+}
+.profile-btn{
+    border:none;
+    background:none;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    cursor:pointer;
+    outline:none;
 }
