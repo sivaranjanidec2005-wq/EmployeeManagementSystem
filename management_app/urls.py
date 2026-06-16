@@ -211,4 +211,6 @@ path(
     views.notifications,
     name="notifications"
 ),
+
+
 ]
