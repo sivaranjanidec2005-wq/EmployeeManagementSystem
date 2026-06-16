@@ -67,44 +67,35 @@ def login_view(request):
                 user=user
             )
 
-            #verification.otp = otp
-            #verification.save()
-            send_mail(
-                "OTP Verification",
-                f"Your OTP is {otp}",
-                settings.EMAIL_HOST_USER,
-                [user.email],
-                fail_silently=False
-            )
+            verification.otp = otp
+            verification.save()
 
-            print("OTP Email Sent")
+            try:
 
-            #try:
+                send_mail(
 
-               # send_mail(
+                   "OTP Verification",
 
-                   # "OTP Verification",
+                   f"""
+Hello {user.username},
 
-                   # f"""
-#Hello {user.username},
+Your OTP is:
 
-#Your OTP is:
+{otp}
 
-#{otp}
+Thank You
+                   """,
 
-#Thank You
-                  #  """,
+                   settings.EMAIL_HOST_USER,
 
-                  #  settings.EMAIL_HOST_USER,
+                   [user.email],
 
-                   # [user.email],
+                   fail_silently=True
 
-                   # fail_silently=True
+                )
 
-               # )
-
-           # except:
-             #   pass
+            except:
+                pass
 
             request.session["otp_user_id"] = user.id
 
