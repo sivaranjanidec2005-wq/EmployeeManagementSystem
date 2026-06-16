@@ -2,36 +2,86 @@
 
 {% block auth_content %}
 
-<div class="container mt-5">
+<div class="login-container">
 
-    <div class="card p-4">
+    <div class="login-left">
 
-        <h3>
+        <div class="overlay">
 
-            OTP Verification
+            <h1>
+                OTP
+                <br>
+                Verification
+            </h1>
 
-        </h3>
+            <p>
+                Please enter the OTP sent
+                to your email address.
+            </p>
 
-        <form method="POST">
+        </div>
 
-            {% csrf_token %}
+    </div>
 
-            <input
-                type="text"
-                name="otp"
-                class="form-control"
-                placeholder="Enter OTP">
+    <div class="login-right">
 
-            <br>
+        <div class="login-box">
 
-            <button
-                class="btn btn-primary">
+            <h2>
+                Verify OTP
+            </h2>
 
-                Verify
+            <p>
+                Secure Login Verification
+            </p>
 
-            </button>
+            {% if messages %}
 
-        </form>
+                {% for message in messages %}
+
+                    <div class="alert alert-danger">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="mb-4">
+
+                    <label>
+
+                        Enter OTP
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="otp"
+                        class="form-control"
+                        placeholder="Enter 6 digit OTP"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn login-btn w-100">
+
+                    Verify OTP
+
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 

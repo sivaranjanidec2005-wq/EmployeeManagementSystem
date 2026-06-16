@@ -97,10 +97,7 @@ Thank You
             except:
                 pass
 
-            login(
-                request,
-                user
-            )
+            request.session["otp_user_id"] = user.id
 
             return redirect(
                 "verify_otp"
@@ -133,17 +130,22 @@ Thank You
 @login_required
 def verify_otp(request):
 
-    verification = EmailVerification.objects.filter(
+    user_id = request.session.get(
+        "otp_user_id"
+    )
 
-        user=request.user
-
-    ).first()
-
-    if not verification:
-
+    if not user_id:
         return redirect(
-            "dashboard"
+            "login"
         )
+
+    user = User.objects.get(
+        id=user_id
+    )
+
+    verification = EmailVerification.objects.get(
+        user=user
+    )
 
     if request.method == "POST":
 
@@ -153,22 +155,16 @@ def verify_otp(request):
 
         if otp == verification.otp:
 
-            Notification.objects.create(
-
-                user=request.user,
-
-                title="Login Verified",
-
-                message="OTP verified successfully."
-
+            login(
+                request,
+                user
             )
 
+            del request.session["otp_user_id"]
+
             messages.success(
-
                 request,
-
                 "OTP Verified Successfully."
-
             )
 
             return redirect(
@@ -178,19 +174,13 @@ def verify_otp(request):
         else:
 
             messages.error(
-
                 request,
-
                 "Invalid OTP"
-
             )
 
     return render(
-
         request,
-
         "management_app/verify_otp.html"
-
     )
 
 @login_required
