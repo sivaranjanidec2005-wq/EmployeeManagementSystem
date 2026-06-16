@@ -913,7 +913,7 @@ def employee_create(request):
 
                 otp=otp,
 
-                is_verified=False
+
 
             )
 
