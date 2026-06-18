@@ -212,5 +212,9 @@ path(
     name="notifications"
 ),
 
-
+path(
+    "ai-project-planner/",
+    views.ai_project_planner,
+    name="ai_project_planner"
+),
 ]

@@ -195,3 +195,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 #EMAIL_HOST_USER = "sivaranjanix6@gmail.com"
 #EMAIL_HOST_PASSWORD = "josw scxj hqfl pyzk"
+
+
+GEMINI_API_KEY = ""
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")

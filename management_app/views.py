@@ -16,6 +16,8 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpResponse
+import google.generativeai as genai
+
 
 
 from reportlab.pdfgen import canvas
@@ -73,6 +75,13 @@ def login_view(request):
             print("EMAIL_HOST =", settings.EMAIL_HOST)
             print("EMAIL_PORT =", settings.EMAIL_PORT)
             print("EMAIL_USER =", settings.EMAIL_HOST_USER)
+
+            print("EMAIL_USER =", settings.EMAIL_HOST_USER)
+
+            if settings.EMAIL_HOST_PASSWORD:
+                print("PASSWORD FOUND")
+            else:
+                print("PASSWORD MISSING")
             try:
                 send_mail(
                     "OTP Verification",
@@ -1971,4 +1980,64 @@ def download_excel(request, pk):
 
 
 
+genai.configure(
+    api_key=settings.GEMINI_API_KEY
+)
 
+from django.shortcuts import render
+
+def ai_project_planner(request):
+
+    tasks = ""
+
+    if request.method == "POST":
+
+        project_name = request.POST.get(
+            "project_name"
+        )
+
+        model = genai.GenerativeModel(
+            "gemini-1.5-flash"
+        )
+
+        prompt = f"""
+        Create project tasks for:
+
+        {project_name}
+
+        Return only a numbered task list.
+        """
+
+        response = model.generate_content(
+            prompt
+        )
+
+        tasks = response.text
+
+    return render(
+        request,
+        "management_app/ai_project_planner.html",
+        {
+            "tasks": tasks
+        }
+    )
+
+def generate_project_tasks(project_name):
+
+    model = genai.GenerativeModel(
+        "gemini-1.5-flash"
+    )
+
+    prompt = f"""
+    Create project tasks for:
+
+    {project_name}
+
+    Return only a numbered task list.
+    """
+
+    response = model.generate_content(
+        prompt
+    )
+
+    return response.text

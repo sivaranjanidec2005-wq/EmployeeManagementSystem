@@ -1,0 +1,44 @@
+{% extends 'management_app/base.html' %}
+
+{% block content %}
+
+<div class="card p-4">
+
+    <h2>AI Project Task Generator</h2>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="project_name"
+            class="form-control"
+            placeholder="Enter Project Name"
+            required
+        >
+
+        <br>
+
+        <button
+            class="btn btn-primary"
+            type="submit"
+        >
+            Generate Tasks
+        </button>
+
+    </form>
+
+    {% if tasks %}
+
+        <hr>
+
+        <h4>Generated Tasks</h4>
+
+        <pre>{{ tasks }}</pre>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
