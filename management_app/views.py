@@ -1985,11 +1985,10 @@ def ai_project_planner(request):
         project_name = request.POST.get(
             "project_name"
         )
-
+        print("GEMINI KEY =", bool(settings.GEMINI_API_KEY))
         model = genai.GenerativeModel(
-            "gemini-1.5-flash"
+            "models/gemini-1.5-flash"
         )
-
         prompt = f"""
         Create project tasks for:
 
@@ -1998,11 +1997,20 @@ def ai_project_planner(request):
         Return only a numbered task list.
         """
 
-        response = model.generate_content(
-            prompt
-        )
+        try:
 
-        tasks = response.text
+            response = model.generate_content(
+                prompt
+            )
+
+            tasks = response.text
+
+
+        except Exception as e:
+
+            print("GEMINI ERROR =", e)
+
+            tasks = f"AI Error: {str(e)}"
 
     return render(
         request,
@@ -2013,8 +2021,9 @@ def ai_project_planner(request):
     )
 
 def generate_project_tasks(project_name):
+
     model = genai.GenerativeModel(
-        "gemini-1.5-flash-latest"
+        "models/gemini-1.5-flash"
     )
 
     prompt = f"""
@@ -2029,8 +2038,11 @@ def generate_project_tasks(project_name):
 
         response = model.generate_content(prompt)
 
-        tasks = response.text
+        return response.text
+
 
     except Exception as e:
+
+        print("GEMINI ERROR =", e)
 
         tasks = f"AI Error: {str(e)}"
