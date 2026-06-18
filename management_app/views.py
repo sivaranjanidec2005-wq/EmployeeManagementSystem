@@ -72,31 +72,20 @@ def login_view(request):
 
             verification.otp = otp
             verification.save()
-            print("EMAIL_HOST =", settings.EMAIL_HOST)
-            print("EMAIL_PORT =", settings.EMAIL_PORT)
-            print("EMAIL_USER =", settings.EMAIL_HOST_USER)
+           # print("EMAIL_HOST =", settings.EMAIL_HOST)
+           # print("EMAIL_PORT =", settings.EMAIL_PORT)
+           # print("EMAIL_USER =", settings.EMAIL_HOST_USER)
 
-            print("EMAIL_USER =", settings.EMAIL_HOST_USER)
-            print("EMAIL_HOST_PASSWORD =", bool(settings.EMAIL_HOST_PASSWORD))
+           # print("EMAIL_USER =", settings.EMAIL_HOST_USER)
+         #print("EMAIL_HOST_PASSWORD =", bool(settings.EMAIL_HOST_PASSWORD))
 
-            if settings.EMAIL_HOST_PASSWORD:
-                print("PASSWORD FOUND")
-            else:
-                print("PASSWORD MISSING")
-            try:
-                send_mail(
-                    "OTP Verification",
-                    f"Hello {user.username},\n\nYour OTP is: {otp}",
-                    settings.EMAIL_HOST_USER,
-                    [user.email],
-                    fail_silently=False
-                )
 
-                print("EMAIL SENT")
 
-            except Exception as e:
+            print("OTP =", otp)
 
-                print("EMAIL ERROR =", e)
+            login(request, user)
+
+            return redirect("verify_otp")
 
 
         else:
