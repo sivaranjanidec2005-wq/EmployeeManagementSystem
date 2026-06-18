@@ -195,7 +195,3 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 #EMAIL_HOST_USER = "sivaranjanix6@gmail.com"
 #EMAIL_HOST_PASSWORD = "josw scxj hqfl pyzk"
-
-print("EMAIL_HOST =", settings.EMAIL_HOST)
-print("EMAIL_PORT =", settings.EMAIL_PORT)
-print("EMAIL_USER =", settings.EMAIL_HOST_USER)

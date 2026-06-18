@@ -70,7 +70,9 @@ def login_view(request):
 
             verification.otp = otp
             verification.save()
-
+            print("EMAIL_HOST =", settings.EMAIL_HOST)
+            print("EMAIL_PORT =", settings.EMAIL_PORT)
+            print("EMAIL_USER =", settings.EMAIL_HOST_USER)
             try:
                 send_mail(
                     "OTP Verification",
