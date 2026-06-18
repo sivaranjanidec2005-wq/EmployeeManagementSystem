@@ -77,6 +77,7 @@ def login_view(request):
             print("EMAIL_USER =", settings.EMAIL_HOST_USER)
 
             print("EMAIL_USER =", settings.EMAIL_HOST_USER)
+            print("EMAIL_HOST_PASSWORD =", bool(settings.EMAIL_HOST_PASSWORD))
 
             if settings.EMAIL_HOST_PASSWORD:
                 print("PASSWORD FOUND")
