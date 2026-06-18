@@ -2013,9 +2013,8 @@ def ai_project_planner(request):
     )
 
 def generate_project_tasks(project_name):
-
     model = genai.GenerativeModel(
-        "gemini-1.5-flash"
+        "gemini-1.5-flash-latest"
     )
 
     prompt = f"""
@@ -2026,8 +2025,12 @@ def generate_project_tasks(project_name):
     Return only a numbered task list.
     """
 
-    response = model.generate_content(
-        prompt
-    )
+    try:
 
-    return response.text
+        response = model.generate_content(prompt)
+
+        tasks = response.text
+
+    except Exception as e:
+
+        tasks = f"AI Error: {str(e)}"
