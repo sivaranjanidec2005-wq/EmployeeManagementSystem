@@ -17,6 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpResponse
 
+
 from reportlab.pdfgen import canvas
 
 from .models import (
@@ -66,14 +67,24 @@ def login_view(request):
             verification, created = EmailVerification.objects.get_or_create(
                 user=user
             )
+
             verification.otp = otp
             verification.save()
 
-            print("OTP =", otp)
+            try:
+                send_mail(
+                    "OTP Verification",
+                    f"Hello {user.username},\n\nYour OTP is: {otp}",
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=False
+                )
 
-            request.session["otp_user_id"] = user.id
+                print("EMAIL SENT")
 
-            return redirect("verify_otp")
+            except Exception as e:
+
+                print("EMAIL ERROR =", e)
 
 
         else:
