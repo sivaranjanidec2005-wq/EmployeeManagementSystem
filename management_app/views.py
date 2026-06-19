@@ -16,7 +16,9 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpResponse
-import google.generativeai as genai
+from groq import Groq
+
+
 
 
 
@@ -1969,12 +1971,29 @@ def download_excel(request, pk):
 
 
 
+def generate_project_tasks(project_name):
 
-genai.configure(
-    api_key=settings.GEMINI_API_KEY
-)
+    client = Groq(
+        api_key=settings.GROQ_API_KEY
+    )
 
-from django.shortcuts import render
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[
+            {
+                "role": "user",
+                "content": f"""
+                Create project tasks for:
+                {project_name}
+
+                Return only a numbered task list.
+                """
+            }
+        ]
+    )
+
+    return response.choices[0].message.content
+
 
 def ai_project_planner(request):
 
@@ -1982,34 +2001,11 @@ def ai_project_planner(request):
 
     if request.method == "POST":
 
-        project_name = request.POST.get(
-            "project_name"
-        )
-        print("GEMINI KEY =", bool(settings.GEMINI_API_KEY))
-        model = genai.GenerativeModel(
-            "models/gemini-1.5-flash"
-        )
-        prompt = f"""
-        Create project tasks for:
-
-        {project_name}
-
-        Return only a numbered task list.
-        """
+        project_name = request.POST.get("project_name")
 
         try:
-
-            response = model.generate_content(
-                prompt
-            )
-
-            tasks = response.text
-
-
+            tasks = generate_project_tasks(project_name)
         except Exception as e:
-
-            print("GEMINI ERROR =", e)
-
             tasks = f"AI Error: {str(e)}"
 
     return render(
@@ -2019,30 +2015,3 @@ def ai_project_planner(request):
             "tasks": tasks
         }
     )
-
-def generate_project_tasks(project_name):
-
-    model = genai.GenerativeModel(
-        "models/gemini-1.5-flash"
-    )
-
-    prompt = f"""
-    Create project tasks for:
-
-    {project_name}
-
-    Return only a numbered task list.
-    """
-
-    try:
-
-        response = model.generate_content(prompt)
-
-        return response.text
-
-
-    except Exception as e:
-
-        print("GEMINI ERROR =", e)
-
-        tasks = f"AI Error: {str(e)}"
